@@ -8,41 +8,22 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SJPlaybackListController'
-  s.version          = '0.1.0'
-  s.summary          = 'A short description of SJPlaybackListController.'
-
-# This description is used to generate tags and improve search results.
-#   * Think: What does it do? Why did you write it? What is the focus?
-#   * Try to keep it short, snappy and to the point.
-#   * Write the description between the DESC delimiters below.
-#   * Finally, don't worry about the indent, CocoaPods strips it!
-
+  s.version          = '0.0.1'
+  s.summary          = 'SJBaseVideoPlayer 播放列表控制器.'
   s.description      = <<-DESC
-TODO: Add long description of the pod here.
+  播放列表控制器: 1. 播放模式: 单曲/循环/随机. 2: 播放列表控制
                        DESC
-
-  s.homepage         = 'https://github.com/changsanjiang@gmail.com/SJPlaybackListController'
-  # s.screenshots     = 'www.example.com/screenshots_1', 'www.example.com/screenshots_2'
+  s.homepage         = 'https://github.com/changsanjiang/SJPlaybackListController'
   s.license          = { :type => 'MIT', :file => 'LICENSE' }
-  s.author           = { 'changsanjiang@gmail.com' => 'changsanjiang@gmail.com' }
-  s.source           = { :git => 'https://github.com/changsanjiang@gmail.com/SJPlaybackListController.git', :tag => s.version.to_s }
-  # s.social_media_url = 'https://twitter.com/<TWITTER_USERNAME>'
+  s.author           = { 'SanJiang' => 'changsanjiang@gmail.com' }
+  s.source           = { :git => 'https://github.com/changsanjiang/SJPlaybackListController.git', :tag => s.version.to_s }
 
   s.ios.deployment_target = '8.0'
-
   s.source_files = 'SJPlaybackListController/*.{h,m}'
 
   s.subspec 'Core' do |ss|
     ss.source_files = 'SJPlaybackListController/Core/*.{h,m}'
   end
 
-  s.dependency 'SJVideoPlayer'
-
-  # s.resource_bundles = {
-  #   'SJPlaybackListController' => ['SJPlaybackListController/Assets/*.png']
-  # }
-
-  # s.public_header_files = 'Pod/Classes/**/*.h'
-  # s.frameworks = 'UIKit', 'MapKit'
-  # s.dependency 'AFNetworking', '~> 2.3'
+  s.dependency 'SJBaseVideoPlayer'
 end

@@ -8,8 +8,8 @@
 #ifndef SJPlaybackListControllerProtocol_h
 #define SJPlaybackListControllerProtocol_h
 
-@protocol SJMediaInfo, SJPlaybackListControllerObserver;
-@class SJVideoPlayerURLAsset, SJBaseVideoPlayer;
+@protocol SJMediaInfo, SJPlaybackListControllerObserver, SJPlaybackListControllerDelegate;
+@class SJPlayModel, SJBaseVideoPlayer;
 
 typedef enum : NSUInteger {
     SJPlaybackMode_ListCycle,       // 列表循环
@@ -26,13 +26,16 @@ typedef enum : NSUInteger {
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol SJPlaybackListController <NSObject>
+@property (nonatomic, weak, nullable) id<SJPlaybackListControllerDelegate> delegate;
 - (id<SJPlaybackListControllerObserver>)getObserver;
 
 - (NSInteger)indexForMediaId:(NSInteger)mediaId; // 如果不存在, 将返回 NSNotFound
 - (nullable id<SJMediaInfo>)mediaAtIndex:(NSInteger)index;
 
-- (void)replaceMedias:(NSArray<id<SJMediaInfo>> *)medias;
 - (void)addMedia:(id<SJMediaInfo>)media;
+- (void)addToTheBackOfCurrentMedia:(id<SJMediaInfo>)media;
+- (void)replaceMedias:(NSArray<id<SJMediaInfo>> *)medias;
+- (void)remove:(NSInteger)mediaId;
 - (void)removeAllMedias;
 
 @property SJSupportedPlaybackMode supportedMode;
@@ -50,10 +53,19 @@ NS_ASSUME_NONNULL_BEGIN
 + (instancetype)new NS_UNAVAILABLE;
 @end
 
+@protocol SJPlaybackListControllerDelegate <NSObject>
+@optional
+/// playbackURLDecisionHandler - 播放地址决定块
+/// 如果返回`nil`, 将采用`index`对应的`audioInfo.playURL`
+- (void)listController:(id<SJPlaybackListController>)listController willPlayAtIndex:(NSInteger)index playbackURLDecisionHandler:(void(^)(NSURL *_Nullable URL))playbackURLDecisionHandler;
+@end
 
 @protocol SJMediaInfo <NSObject>
 @property (nonatomic, readonly) NSInteger id;
-@property (nonatomic, strong, readonly) SJVideoPlayerURLAsset *asset;
+@property (nonatomic, strong, readonly) SJPlayModel *viewHierarchy; // 视图层级
+@property (nonatomic, strong, readonly) NSURL *URL;
+@property (nonatomic, strong, readonly) NSString *title;
+@property (nonatomic, readonly) NSTimeInterval specifyStartTime;
 @end
 
 @protocol SJPlaybackListControllerObserver <NSObject>
