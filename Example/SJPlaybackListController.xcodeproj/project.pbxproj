@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		3C7DF61071550EC50ABE8DC8 /* Pods_SJPlaybackListController_Example.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D6DD46CC931B7EBED8B3DA16 /* Pods_SJPlaybackListController_Example.framework */; };
 		6003F58E195388D20070C39A /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58D195388D20070C39A /* Foundation.framework */; };
 		6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F58F195388D20070C39A /* CoreGraphics.framework */; };
 		6003F592195388D20070C39A /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6003F591195388D20070C39A /* UIKit.framework */; };
@@ -22,8 +21,8 @@
 		6003F5BA195388D20070C39A /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 6003F5B8195388D20070C39A /* InfoPlist.strings */; };
 		6003F5BC195388D20070C39A /* Tests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6003F5BB195388D20070C39A /* Tests.m */; };
 		71719F9F1E33DC2100824A3D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 71719F9D1E33DC2100824A3D /* LaunchScreen.storyboard */; };
+		7CDF467DF2EFE29480A2CC44 /* libPods-SJPlaybackListController_Example.a in Frameworks */ = {isa = PBXBuildFile; fileRef = B55940E92FB484E7CE45638A /* libPods-SJPlaybackListController_Example.a */; };
 		873B8AEB1B1F5CCA007FD442 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 873B8AEA1B1F5CCA007FD442 /* Main.storyboard */; };
-		F644046E0BBBAEA4E0F296BC /* Pods_SJPlaybackListController_Tests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 09414E8AF9531DBB1043D65C /* Pods_SJPlaybackListController_Tests.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -37,8 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		09414E8AF9531DBB1043D65C /* Pods_SJPlaybackListController_Tests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SJPlaybackListController_Tests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		207B9DC01AE9040C7A060D5B /* SJPlaybackListController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; name = SJPlaybackListController.podspec; path = ../SJPlaybackListController.podspec; sourceTree = "<group>"; };
+		207B9DC01AE9040C7A060D5B /* SJPlaybackListController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SJPlaybackListController.podspec; path = ../SJPlaybackListController.podspec; sourceTree = "<group>"; };
 		4EB79F186C89B1727D243A9A /* Pods-SJPlaybackListController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJPlaybackListController_Example.release.xcconfig"; path = "Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* SJPlaybackListController_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SJPlaybackListController_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -61,12 +59,11 @@
 		606FC2411953D9B200FFA9A0 /* Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Tests-Prefix.pch"; sourceTree = "<group>"; };
 		71719F9E1E33DC2100824A3D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		873B8AEA1B1F5CCA007FD442 /* Main.storyboard */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.storyboard; name = Main.storyboard; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		8AFD73DFC5DB446A46D954EC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
-		928A6BB00D08C8CBB3055372 /* Pods-SJPlaybackListController_Tests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJPlaybackListController_Tests.release.xcconfig"; path = "Target Support Files/Pods-SJPlaybackListController_Tests/Pods-SJPlaybackListController_Tests.release.xcconfig"; sourceTree = "<group>"; };
-		A5074F3252451ECD2A42FB8B /* Pods-SJPlaybackListController_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJPlaybackListController_Tests.debug.xcconfig"; path = "Target Support Files/Pods-SJPlaybackListController_Tests/Pods-SJPlaybackListController_Tests.debug.xcconfig"; sourceTree = "<group>"; };
-		BFCA321660CA298A2CC7A5C1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; name = README.md; path = ../README.md; sourceTree = "<group>"; };
+		8AFD73DFC5DB446A46D954EC /* LICENSE */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = LICENSE; path = ../LICENSE; sourceTree = "<group>"; };
+		B55940E92FB484E7CE45638A /* libPods-SJPlaybackListController_Example.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJPlaybackListController_Example.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		BFCA321660CA298A2CC7A5C1 /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		C1A51BA72B8CF950F0DE88C5 /* Pods-SJPlaybackListController_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJPlaybackListController_Example.debug.xcconfig"; path = "Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example.debug.xcconfig"; sourceTree = "<group>"; };
-		D6DD46CC931B7EBED8B3DA16 /* Pods_SJPlaybackListController_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SJPlaybackListController_Example.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		E9495EA679B4E015576B39E6 /* libPods-SJPlaybackListController_Tests.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-SJPlaybackListController_Tests.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,7 +74,7 @@
 				6003F590195388D20070C39A /* CoreGraphics.framework in Frameworks */,
 				6003F592195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F58E195388D20070C39A /* Foundation.framework in Frameworks */,
-				3C7DF61071550EC50ABE8DC8 /* Pods_SJPlaybackListController_Example.framework in Frameworks */,
+				7CDF467DF2EFE29480A2CC44 /* libPods-SJPlaybackListController_Example.a in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -88,7 +85,6 @@
 				6003F5B0195388D20070C39A /* XCTest.framework in Frameworks */,
 				6003F5B2195388D20070C39A /* UIKit.framework in Frameworks */,
 				6003F5B1195388D20070C39A /* Foundation.framework in Frameworks */,
-				F644046E0BBBAEA4E0F296BC /* Pods_SJPlaybackListController_Tests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -123,8 +119,8 @@
 				6003F58F195388D20070C39A /* CoreGraphics.framework */,
 				6003F591195388D20070C39A /* UIKit.framework */,
 				6003F5AF195388D20070C39A /* XCTest.framework */,
-				D6DD46CC931B7EBED8B3DA16 /* Pods_SJPlaybackListController_Example.framework */,
-				09414E8AF9531DBB1043D65C /* Pods_SJPlaybackListController_Tests.framework */,
+				B55940E92FB484E7CE45638A /* libPods-SJPlaybackListController_Example.a */,
+				E9495EA679B4E015576B39E6 /* libPods-SJPlaybackListController_Tests.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -190,10 +186,7 @@
 			children = (
 				C1A51BA72B8CF950F0DE88C5 /* Pods-SJPlaybackListController_Example.debug.xcconfig */,
 				4EB79F186C89B1727D243A9A /* Pods-SJPlaybackListController_Example.release.xcconfig */,
-				A5074F3252451ECD2A42FB8B /* Pods-SJPlaybackListController_Tests.debug.xcconfig */,
-				928A6BB00D08C8CBB3055372 /* Pods-SJPlaybackListController_Tests.release.xcconfig */,
 			);
-			name = Pods;
 			path = Pods;
 			sourceTree = "<group>";
 		};
@@ -208,7 +201,7 @@
 				6003F586195388D20070C39A /* Sources */,
 				6003F587195388D20070C39A /* Frameworks */,
 				6003F588195388D20070C39A /* Resources */,
-				113E6DF1B99F6E1B741970FD /* [CP] Embed Pods Frameworks */,
+				6C0D86205D6F03F5677D03AC /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -223,7 +216,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 6003F5C2195388D20070C39A /* Build configuration list for PBXNativeTarget "SJPlaybackListController_Tests" */;
 			buildPhases = (
-				57D1036B1EFA9A201900F421 /* [CP] Check Pods Manifest.lock */,
 				6003F5AA195388D20070C39A /* Sources */,
 				6003F5AB195388D20070C39A /* Frameworks */,
 				6003F5AC195388D20070C39A /* Resources */,
@@ -248,6 +240,10 @@
 				LastUpgradeCheck = 0720;
 				ORGANIZATIONNAME = "changsanjiang@gmail.com";
 				TargetAttributes = {
+					6003F589195388D20070C39A = {
+						DevelopmentTeam = U5A7L7SMNP;
+						ProvisioningStyle = Manual;
+					};
 					6003F5AD195388D20070C39A = {
 						TestTargetID = 6003F589195388D20070C39A;
 					};
@@ -295,28 +291,6 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
-		113E6DF1B99F6E1B741970FD /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/SJPlaybackListController/SJPlaybackListController.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/SJPlaybackListController.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
 		165CDF7CDC3B9B6A5C5B366B /* [CP] Check Pods Manifest.lock */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -339,7 +313,7 @@
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
 			showEnvVarsInLog = 0;
 		};
-		57D1036B1EFA9A201900F421 /* [CP] Check Pods Manifest.lock */ = {
+		6C0D86205D6F03F5677D03AC /* [CP] Copy Pods Resources */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -347,18 +321,22 @@
 			inputFileListPaths = (
 			);
 			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
+				"${PODS_ROOT}/Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example-resources.sh",
+				"${PODS_ROOT}/../../../SJBaseVideoPlayer/SJBaseVideoPlayer/SJDeviceVolumeAndBrightnessManager/ResourceLoader/SJDeviceVolumeAndBrightnessManager.bundle",
+				"${PODS_ROOT}/SJVideoPlayer/SJVideoPlayer/SJEdgeControlLayer/ResourceLoader/SJEdgeControlLayer.bundle",
+				"${PODS_ROOT}/SJVideoPlayer/SJVideoPlayer/SJFilmEditingControlLayer/ResourceLoader/SJFilmEditing.bundle",
 			);
-			name = "[CP] Check Pods Manifest.lock";
+			name = "[CP] Copy Pods Resources";
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-SJPlaybackListController_Tests-checkManifestLockResult.txt",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SJDeviceVolumeAndBrightnessManager.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SJEdgeControlLayer.bundle",
+				"${TARGET_BUILD_DIR}/${UNLOCALIZED_RESOURCES_FOLDER_PATH}/SJFilmEditing.bundle",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -498,12 +476,15 @@
 			baseConfigurationReference = C1A51BA72B8CF950F0DE88C5 /* Pods-SJPlaybackListController_Example.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = U5A7L7SMNP;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SJPlaybackListController/SJPlaybackListController-Prefix.pch";
 				INFOPLIST_FILE = "SJPlaybackListController/SJPlaybackListController-Info.plist";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = WildcardProfile;
 				WRAPPER_EXTENSION = app;
 			};
 			name = Debug;
@@ -513,19 +494,21 @@
 			baseConfigurationReference = 4EB79F186C89B1727D243A9A /* Pods-SJPlaybackListController_Example.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Manual;
+				DEVELOPMENT_TEAM = "";
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "SJPlaybackListController/SJPlaybackListController-Prefix.pch";
 				INFOPLIST_FILE = "SJPlaybackListController/SJPlaybackListController-Info.plist";
 				MODULE_NAME = ExampleApp;
 				PRODUCT_BUNDLE_IDENTIFIER = "org.cocoapods.demo.${PRODUCT_NAME:rfc1034identifier}";
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				WRAPPER_EXTENSION = app;
 			};
 			name = Release;
 		};
 		6003F5C3195388D20070C39A /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = A5074F3252451ECD2A42FB8B /* Pods-SJPlaybackListController_Tests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (
@@ -549,7 +532,6 @@
 		};
 		6003F5C4195388D20070C39A /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 928A6BB00D08C8CBB3055372 /* Pods-SJPlaybackListController_Tests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				FRAMEWORK_SEARCH_PATHS = (

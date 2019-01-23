@@ -30,8 +30,14 @@ TODO: Add long description of the pod here.
 
   s.ios.deployment_target = '8.0'
 
-  s.source_files = 'SJPlaybackListController/Classes/**/*'
-  
+  s.source_files = 'SJPlaybackListController/*.{h,m}'
+
+  s.subspec 'Core' do |ss|
+    ss.source_files = 'SJPlaybackListController/Core/*.{h,m}'
+  end
+
+  s.dependency 'SJVideoPlayer'
+
   # s.resource_bundles = {
   #   'SJPlaybackListController' => ['SJPlaybackListController/Assets/*.png']
   # }
