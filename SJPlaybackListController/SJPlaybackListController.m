@@ -7,20 +7,12 @@
 
 #import "SJPlaybackListController.h"
 #import "SJPlaybackListControllerObserver.h"
-#if __has_include(<SJBaseVideoPlayer/SJBaseVideoPlayer.h>)
-#import <SJBaseVideoPlayer/SJBaseVideoPlayer.h>
-#import <SJBaseVideoPlayer/SJBaseVideoPlayer+PlayStatus.h>
-#else
-#import "SJBaseVideoPlayer.h"
-#import "SJBaseVideoPlayer+PlayStatus.h"
-#endif
 
 NS_ASSUME_NONNULL_BEGIN
 #define SJPlaybackListControllerLock() dispatch_semaphore_wait(_lock, DISPATCH_TIME_FOREVER);
 #define SJPlaybackListControllerUnlock() dispatch_semaphore_signal(_lock);
 
 @interface SJPlaybackListController ()
-@property (nonatomic, strong, readonly) id<SJPlayStatusObserver> playStatusObserver;
 @property (nonatomic, strong, readonly) NSMutableArray<id<SJMediaInfo>> *m;
 @property NSInteger currentMediaId;
 @end
