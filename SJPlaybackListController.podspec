@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SJPlaybackListController'
-  s.version          = '0.0.1'
+  s.version          = '0.0.2'
   s.summary          = 'SJBaseVideoPlayer 播放列表控制器.'
   s.description      = <<-DESC
   播放列表控制器: 1. 播放模式: 单曲/循环/随机. 2: 播放列表控制
@@ -25,5 +25,5 @@ Pod::Spec.new do |s|
     ss.source_files = 'SJPlaybackListController/Core/*.{h,m}'
   end
 
-  s.dependency 'SJBaseVideoPlayer'
+  #s.dependency 'SJBaseVideoPlayer'
 end
