@@ -36,7 +36,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		207B9DC01AE9040C7A060D5B /* SJPlaybackListController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SJPlaybackListController.podspec; path = ../SJPlaybackListController.podspec; sourceTree = "<group>"; };
+		207B9DC01AE9040C7A060D5B /* SJPlaybackListController.podspec */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; name = SJPlaybackListController.podspec; path = ../SJPlaybackListController.podspec; sourceTree = "<group>"; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		4EB79F186C89B1727D243A9A /* Pods-SJPlaybackListController_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SJPlaybackListController_Example.release.xcconfig"; path = "Target Support Files/Pods-SJPlaybackListController_Example/Pods-SJPlaybackListController_Example.release.xcconfig"; sourceTree = "<group>"; };
 		6003F58A195388D20070C39A /* SJPlaybackListController_Example.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SJPlaybackListController_Example.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6003F58D195388D20070C39A /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
@@ -254,6 +254,7 @@
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
+				English,
 				en,
 				Base,
 			);
