@@ -14,6 +14,6 @@ end
 
 target 'SJPlaybackListController_Example' do
   pod 'SJPlaybackListController', :path => '../'
-  pod 'SJBaseVideoPlayer', :path => '../../SJBaseVideoPlayer'
+  #pod 'SJBaseVideoPlayer', :path => '../../SJBaseVideoPlayer'
   pod 'Masonry', :inhibit_warnings => true
 end

@@ -1,1 +1,0 @@
-../../../SJVideoPlayer/SJVideoPlayer/SJMoreSettingControlLayer/Core/SJVideoPlayerMoreSettingSecondaryView.h
