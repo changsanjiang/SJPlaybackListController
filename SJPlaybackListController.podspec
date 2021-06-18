@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'SJPlaybackListController'
-  s.version          = '1.0.0'
+  s.version          = '1.0.1'
   s.summary          = '播放列表控制器.'
   s.description      = <<-DESC
   播放列表控制器: 1. 播放模式: 单曲/循环/随机. 2: 播放列表控制

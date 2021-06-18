@@ -15,6 +15,7 @@
     SJPlaybackModeMask _supportedModes;
     SJPlaybackMode _mode;
     BOOL _infiniteListLoop;
+    BOOL _isWaitingToPlaybackEnds;
     id<SJPlaybackListControllerDelegate> _delegate;
 }
 @property (nonatomic) SJPlaybackMode mode;
@@ -86,7 +87,7 @@
 - (nullable id)itemAtIndex:(NSInteger)index {
     __block id item = nil;
     [self _lockInBlock:^{
-        item = [self _isSafeIndexForGetting:index] ? [_items objectAtIndex:index] : nil;
+        item = [self _itemAtIndex:index];
     }];
     return item;
 }
@@ -107,6 +108,9 @@
         [self _lockInBlock:^{
             NSInteger idx = _items.count;
             [_items addObject:item];
+            if ( _curIndex == NSNotFound ) {
+                _curIndex = 0;
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
                     if ( [observer respondsToSelector:@selector(playbackListController:didAddItemAtIndex:)] ) {
@@ -123,6 +127,9 @@
         [self _lockInBlock:^{
             NSInteger idx = _items.count;
             [_items addObjectsFromArray:items];
+            if ( _curIndex == NSNotFound ) {
+                _curIndex = 0;
+            }
             NSIndexSet *indexes = [NSIndexSet.alloc initWithIndexesInRange:NSMakeRange(idx, items.count)];
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
@@ -139,6 +146,9 @@
     [self _lockInBlock:^{
         if ( item != nil && [self _isSafeIndexForInserting:paramIndex] ) {
             [_items insertObject:item atIndex:paramIndex];
+            if ( _curIndex == NSNotFound ) {
+                _curIndex = 0;
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
                 [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
                     if ( [observer respondsToSelector:@selector(playbackListController:didInsertItemAtIndex:)] ) {
@@ -154,7 +164,10 @@
     [self _lockInBlock:^{
         if ( _items.count != 0 ) {
             [_items removeAllObjects];
+            _isWaitingToPlaybackEnds = NO;
+            _curIndex = NSNotFound;
             dispatch_async(dispatch_get_main_queue(), ^{
+                [self.delegate needStopPlaybackWithPlaybackListController:self];
                 [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
                     if ( [observer respondsToSelector:@selector(playbackListControllerDidRemoveAllItems:)] ) {
                         [observer playbackListControllerDidRemoveAllItems:self];
@@ -167,8 +180,30 @@
 - (void)removeItemAtIndex:(NSInteger)paramIndex {
     [self _lockInBlock:^{
         if ( [self _isSafeIndexForGetting:paramIndex] ) {
+            BOOL needsStopPlayback = NO;
             [_items removeObjectAtIndex:paramIndex];
+            if      ( _items.count == 0 ) {
+                _isWaitingToPlaybackEnds = NO;
+                _curIndex = NSNotFound;
+                needsStopPlayback = YES;
+            }
+            // 如果删除的是当前的item
+            else if ( _curIndex == paramIndex ) {
+                BOOL isLastItem = _curIndex == _items.count - 1;
+                if ( isLastItem  ) {
+                    _curIndex = 0;
+                    if ( _isWaitingToPlaybackEnds )
+                        _isWaitingToPlaybackEnds = _infiniteListLoop;
+                }
+                
+                if ( _isWaitingToPlaybackEnds ) {
+                    [self _playItemAtIndex:_curIndex];
+                }
+            }
             dispatch_async(dispatch_get_main_queue(), ^{
+                if ( needsStopPlayback ) {
+                    [self.delegate needStopPlaybackWithPlaybackListController:self];
+                }
                 [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
                     if ( [observer respondsToSelector:@selector(playbackListController:didRemoveItemAtIndex:)] ) {
                         [observer playbackListController:self didRemoveItemAtIndex:paramIndex];
@@ -261,28 +296,15 @@
     }];
 }
 
+- (void)playCurrentItem {
+    [self _lockInBlock:^{
+        [self _playItemAtIndex:_curIndex];
+    }];
+}
+
 - (void)playNextItem {
     [self _lockInBlock:^{
-        NSInteger count = _items.count;
-        
-       if ( count == 0 )
-           return;
-        
-        if ( _items.count == 1 && _curIndex != NSNotFound ) {
-            [self _replay];
-            return;
-        }
-        
-        if ( _mode == SJPlaybackModeShuffle ) {
-            [self _shufflePlay];
-            return;
-        }
-        
-        NSInteger nextIdx = _curIndex != NSNotFound ? (_curIndex + 1) : 0;
-        if ( nextIdx == count && _infiniteListLoop ) {
-            nextIdx = 0;
-        }
-        [self _playItemAtIndex:nextIdx];
+        [self _playNextItem];
     }];
 }
 
@@ -311,13 +333,69 @@
     }];
 }
 
-- (void)currentItemFinishedPlaying {
-    if ( self.mode == SJPlaybackModeRepeatOne ) {
-        [self _replay];
+- (void)replaceItemsFromArray:(NSArray *)items {
+    if ( items.count == 0 ) {
+        [self removeAllItems];
+        return;
     }
-    else {
-        [self playNextItem];
-    }
+    
+    [self _lockInBlock:^{
+        id curItem = [self _itemAtIndex:_curIndex];
+        NSInteger index = NSNotFound;
+        if ( curItem != nil ) {
+            index = [items indexOfObject:curItem];
+        }
+        BOOL isExists = index != NSNotFound;
+        NSInteger curIndex = isExists ? index : 0;
+        [_items removeAllObjects];
+        [_items addObjectsFromArray:items];
+        _curIndex = curIndex;
+        
+        if ( !isExists && _isWaitingToPlaybackEnds ) {
+            _isWaitingToPlaybackEnds = NO;
+        }
+        
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
+                if ( [observer respondsToSelector:@selector(playbackListController:didReplaceItemsWithIndexes:)] ) {
+                    [observer playbackListController:self didReplaceItemsWithIndexes:[NSIndexSet indexSetWithIndexesInRange:NSMakeRange(0, items.count)]];
+                }
+            }];
+        });
+    }];
+}
+
+- (BOOL)isWaitingToPlaybackEnds {
+    __block BOOL isWaitingToPlaybackEnds;
+    [self _lockInBlock:^{
+        isWaitingToPlaybackEnds = _isWaitingToPlaybackEnds;
+    }];
+    return isWaitingToPlaybackEnds;
+}
+
+- (void)finishPlayback {
+    [self _lockInBlock:^{
+        if ( _items.count == 0 || !_isWaitingToPlaybackEnds )
+            return;
+        
+        if ( _mode == SJPlaybackModeRepeatOne ) {
+            [self _replay];
+            return;
+        }
+        
+        if ( !_infiniteListLoop && _curIndex == _items.count - 1 ) {
+            _isWaitingToPlaybackEnds = NO;
+            return;
+        }
+        
+        [self _playNextItem];
+    }];
+}
+
+- (void)cancelPlayback {
+    [self _lockInBlock:^{
+        _isWaitingToPlaybackEnds = NO;
+    }];
 }
 
 #pragma mark -
@@ -380,14 +458,47 @@
     id item = [self _isSafeIndexForGetting:index] ? [_items objectAtIndex:index] : nil;
     if ( item == nil ) return;
     _curIndex = index;
+    _isWaitingToPlaybackEnds = YES;
     dispatch_async(dispatch_get_main_queue(), ^{
         [self.delegate playbackListController:self needPlayItemAtIndex:index];
+        [self _enumerateObserversUsingBlock:^(id<SJPlaybackListControllerObserver> observer, NSInteger index, BOOL *stop) {
+            if ( [observer respondsToSelector:@selector(playbackListController:didPlayItemAtIndex:)] ) {
+                [observer playbackListController:self didPlayItemAtIndex:index];
+            }
+        }];
     });
 }
 
 - (void)_replay {
     dispatch_async(dispatch_get_main_queue(), ^{
-        [self.delegate playbackListControllerNeedReplayCurrentItem:self];
+        [self.delegate needReplayForCurrentItemWithPlaybackListController:self];
     });
+}
+
+- (void)_playNextItem {
+    NSInteger count = _items.count;
+    
+   if ( count == 0 )
+       return;
+    
+    if ( _items.count == 1 && _curIndex != NSNotFound ) {
+        [self _replay];
+        return;
+    }
+    
+    if ( _mode == SJPlaybackModeShuffle ) {
+        [self _shufflePlay];
+        return;
+    }
+    
+    NSInteger nextIdx = _curIndex != NSNotFound ? (_curIndex + 1) : 0;
+    if ( nextIdx == count && _infiniteListLoop ) {
+        nextIdx = 0;
+    }
+    [self _playItemAtIndex:nextIdx];
+}
+
+- (nullable id)_itemAtIndex:(NSInteger)index {
+    return [self _isSafeIndexForGetting:index] ? [_items objectAtIndex:index] : nil;
 }
 @end

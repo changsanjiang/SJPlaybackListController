@@ -48,19 +48,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 // playback control
 
+/// 当前item的索引
+///
+/// 索引值随以下状态发生变化:
+///     - 列表为空时, 将被设置为: NSNotFound
+///     - 添加新的item时: 如果添加之前列表为空, 则在添加之后索引值将被设置为: 0
+///     - 移除当前播放的item时, 此item如果是lastItem, 则索引将被设置为: 0
+///     - 切换item时, 将会设置为对应item的索引
+///     - 替换列表的操作, 请查看`replaceItemsFromArray:`
+///
 @property (nonatomic, readonly) NSInteger curIndex;
 - (void)playItemAtIndex:(NSInteger)index;
+- (void)playCurrentItem;
 - (void)playNextItem;
 - (void)playPreviousItem;
 
-// callback
+/// 替换操作
+///
+///     对curIndex索引的设置:
+///         - curItem如果在`items`中, 则替换后的curIndex将变为新的索引值, 将保持当前等待状态
+///         - 否则会被设置为0. 等待状态将会被取消
+///
+- (void)replaceItemsFromArray:(NSArray *)items;
 
-- (void)currentItemFinishedPlaying;
+/// 是否等待播放完毕
+///
+@property (nonatomic, readonly) BOOL isWaitingToPlaybackEnds;
+- (void)finishPlayback;
+- (void)cancelPlayback;
 @end
 
 @protocol SJPlaybackListControllerDelegate <NSObject>
 - (void)playbackListController:(id<SJPlaybackListController>)controller needPlayItemAtIndex:(NSInteger)index;
-- (void)playbackListControllerNeedReplayCurrentItem:(id<SJPlaybackListController>)controller;
+- (void)needReplayForCurrentItemWithPlaybackListController:(id<SJPlaybackListController>)controller;
+- (void)needStopPlaybackWithPlaybackListController:(id<SJPlaybackListController>)controller;
 @end
 
 @protocol SJPlaybackListControllerObserver <NSObject>
@@ -70,6 +91,7 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playbackListController:(id<SJPlaybackListController>)controller didAddItemAtIndex:(NSInteger)index;
 - (void)playbackListController:(id<SJPlaybackListController>)controller didAddItemsAtIndexes:(NSIndexSet *)indexes;
 - (void)playbackListController:(id<SJPlaybackListController>)controller didInsertItemAtIndex:(NSInteger)index;
+- (void)playbackListController:(id<SJPlaybackListController>)controller didReplaceItemsWithIndexes:(NSIndexSet *)indexes;
 - (void)playbackListControllerDidRemoveAllItems:(id<SJPlaybackListController>)controller;
 - (void)playbackListController:(id<SJPlaybackListController>)controller didRemoveItemAtIndex:(NSInteger)index;
 @end

@@ -51,8 +51,9 @@ NS_ASSUME_NONNULL_BEGIN
 - (void)playNextItem;
 - (void)playPreviousItem;
  
-- (void)currentItemFinishedPlaying;
-
+@property (nonatomic, readonly) BOOL isWaitingToPlaybackEnds;
+- (void)finishPlayback;
+- (void)cancelPlayback;
 @end
 
 NS_ASSUME_NONNULL_END
