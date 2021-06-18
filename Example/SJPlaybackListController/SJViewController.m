@@ -92,7 +92,7 @@
 - (void)playbackDidFinish:(TestVideoPlayer *)player {
     NSLog(@"%s", sel_getName(_cmd));
     
-    [_listController currentItemFinishedPlaying];
+    [_listController finishPlayback];
 }
 
 #pragma mark - SJPlaybackListControllerObserver
