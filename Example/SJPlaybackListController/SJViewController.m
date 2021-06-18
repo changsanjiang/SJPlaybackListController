@@ -30,6 +30,7 @@
 @property (nonatomic, weak, nullable) id<TestVideoPlayerDelegate> delegate;
 - (void)playVideo:(TestVideoItem *)video;
 - (void)replay;
+- (void)stop;
 @end
 
 @implementation TestVideoPlayer
@@ -39,6 +40,10 @@
 
 - (void)replay {
     [self _delay];
+}
+
+- (void)stop {
+    [NSObject cancelPreviousPerformRequestsWithTarget:_delegate];
 }
 
 - (void)_delay {
@@ -81,10 +86,16 @@
     [_player playVideo:[controller itemAtIndex:index]];
 }
 
-- (void)playbackListControllerNeedReplayCurrentItem:(id<SJPlaybackListController>)controller {
+- (void)needReplayForCurrentItemWithPlaybackListController:(id<SJPlaybackListController>)controller {
     NSLog(@"%s", sel_getName(_cmd));
     
     [_player replay];
+}
+
+- (void)needStopPlaybackWithPlaybackListController:(id<SJPlaybackListController>)controller {
+    NSLog(@"%s", sel_getName(_cmd));
+    
+    [_player stop];
 }
 
 #pragma mark - TestVideoPlayerDelegate
