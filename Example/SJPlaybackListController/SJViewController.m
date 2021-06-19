@@ -16,45 +16,85 @@
 
 #pragma mark -
 
-@interface TestVideoItem : NSObject
+@interface TestVideoItem : NSObject<SJPlaybackItem>
++ (instancetype)testVideo;
+- (instancetype)initWithId:(NSInteger)id url:(NSString *)url;
+@property (nonatomic) NSInteger id;
 @property (nonatomic, strong) NSString *url;
 @end
 
 @implementation TestVideoItem
++ (instancetype)testVideo {
+    static NSInteger idx = 0;
+    NSInteger videoId = ++idx;
+    NSString *url = @"http://...test/video.mp4";
+    return [[self alloc] initWithId:videoId url:url];
+}
 
+- (instancetype)initWithId:(NSInteger)id url:(NSString *)url {
+    self = [super init];
+    if ( self ) {
+        _url = url;
+        _id = id;
+    }
+    return self;
+}
+
+- (id)itemKey {
+    return @(_id);
+}
 @end
 
 #pragma mark -
 
-@interface TestVideoPlayer : NSObject
-@property (nonatomic, weak, nullable) id<TestVideoPlayerDelegate> delegate;
-- (void)playVideo:(TestVideoItem *)video;
+@interface TestVideoPlayer : NSObject<SJPlaybackController>
+@property (nonatomic, copy, nullable) SJPlaybackCompletionHandler playbackCompletionHandler;
+@property (nonatomic, readonly) BOOL isPaused;
+
+@property (nonatomic, strong, readonly, nullable) TestVideoItem *curItem;
+- (void)playWithItem:(TestVideoItem *)item;
 - (void)replay;
 - (void)stop;
 @end
 
 @implementation TestVideoPlayer
-- (void)playVideo:(TestVideoItem *)video {
+- (void)playWithItem:(TestVideoItem *)item {
+    NSLog(@"%s video.id = %ld;", sel_getName(_cmd), (long)item.id);
+    
+    _curItem = item;
     [self _delay];
 }
 
 - (void)replay {
+    NSLog(@"%s", sel_getName(_cmd));
+
     [self _delay];
 }
 
 - (void)stop {
-    [NSObject cancelPreviousPerformRequestsWithTarget:_delegate];
+    NSLog(@"%s", sel_getName(_cmd));
+
+    _curItem = nil;
+    _isPaused = YES;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
 }
 
 - (void)_delay {
-    [NSObject cancelPreviousPerformRequestsWithTarget:_delegate];
-    [(id)_delegate performSelector:@selector(playbackDidFinish:) withObject:self afterDelay:5];
+    _isPaused = NO;
+    [NSObject cancelPreviousPerformRequestsWithTarget:self];
+    [self performSelector:@selector(_playbackDidComplete) withObject:nil afterDelay:5];
+}
+
+- (void)_playbackDidComplete {
+    NSLog(@"%s", sel_getName(_cmd));
+
+    if ( _playbackCompletionHandler ) _playbackCompletionHandler();
 }
 @end
 
 #pragma mark -
 
-@interface SJViewController ()<SJPlaybackListControllerDelegate, TestVideoPlayerDelegate, SJPlaybackListControllerObserver>
+@interface SJViewController ()<SJPlaybackListControllerObserver>
 @property (weak, nonatomic) IBOutlet UILabel *modeLabel;
 @property (nonatomic, strong) SJPlaybackListController<TestVideoItem *> *listController;
 @property (nonatomic, strong) TestVideoPlayer *player;
@@ -65,45 +105,13 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    _listController = SJPlaybackListController.alloc.init;
-    _listController.delegate = self;
-    _listController.infiniteListLoop = YES;
-    [_listController registerObserver:self];
-    
     _player = TestVideoPlayer.alloc.init;
-    _player.delegate = self;
+    _listController = [SJPlaybackListController.alloc initWithPlaybackController:_player];
+    [_listController registerObserver:self];
     
     [self _refreshModeLabel];
     
 	// Do any additional setup after loading the view, typically from a nib.
-}
-
-#pragma mark - SJPlaybackListControllerDelegate
-
-- (void)playbackListController:(id<SJPlaybackListController>)controller needPlayItemAtIndex:(NSInteger)index {
-    NSLog(@"%s - %ld", sel_getName(_cmd), (long)index);
-    
-    [_player playVideo:[controller itemAtIndex:index]];
-}
-
-- (void)needReplayForCurrentItemWithPlaybackListController:(id<SJPlaybackListController>)controller {
-    NSLog(@"%s", sel_getName(_cmd));
-    
-    [_player replay];
-}
-
-- (void)needStopPlaybackWithPlaybackListController:(id<SJPlaybackListController>)controller {
-    NSLog(@"%s", sel_getName(_cmd));
-    
-    [_player stop];
-}
-
-#pragma mark - TestVideoPlayerDelegate
- 
-- (void)playbackDidFinish:(TestVideoPlayer *)player {
-    NSLog(@"%s", sel_getName(_cmd));
-    
-    [_listController finishPlayback];
 }
 
 #pragma mark - SJPlaybackListControllerObserver
@@ -132,13 +140,13 @@
 - (IBAction)addItem:(id)sender {
     NSLog(@"%s", sel_getName(_cmd));
 
-    [_listController addItem:TestVideoItem.new];
+    [_listController addItem:TestVideoItem.testVideo];
 }
 
 - (IBAction)addItemsFromArray:(id)sender {
     NSLog(@"%s", sel_getName(_cmd));
     
-    [_listController addItemsFromArray:@[TestVideoItem.new, TestVideoItem.new, TestVideoItem.new, TestVideoItem.new, TestVideoItem.new]];
+    [_listController addItemsFromArray:@[TestVideoItem.testVideo, TestVideoItem.testVideo, TestVideoItem.testVideo, TestVideoItem.testVideo, TestVideoItem.testVideo]];
 }
 
 - (IBAction)playNextItem:(id)sender {

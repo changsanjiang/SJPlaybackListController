@@ -10,12 +10,12 @@
 #define SJPlaybackListControllerInterfaces_h
 
 #import "SJPlaybackListControllerDefines.h"
-@protocol SJPlaybackListControllerDelegate, SJPlaybackListControllerObserver;
+@protocol SJPlaybackItem, SJPlaybackController, SJPlaybackListControllerObserver;
 
 NS_ASSUME_NONNULL_BEGIN
 @protocol SJPlaybackListController <NSObject>
 
-@property (nonatomic, weak, readonly, nullable) id<SJPlaybackListControllerDelegate> delegate;
+@property (nonatomic, weak, readonly, nullable) id<SJPlaybackController> playbackController;
 
 // observer
 
@@ -25,17 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
 // items
 
 @property (nonatomic, readonly) NSInteger numberOfItems;
-- (nullable id)itemAtIndex:(NSInteger)index;
-- (NSInteger)indexOfItem:(id)item;
+- (nullable id<SJPlaybackItem>)itemAtIndex:(NSInteger)index;
+- (NSInteger)indexOfItem:(id<SJPlaybackItem>)item;
+- (NSInteger)indexOfItemForKey:(id)itemKey;
 
-- (void)addItem:(id)item;
-- (void)addItemsFromArray:(NSArray *)items;
-- (void)insertItem:(id)item atIndex:(NSInteger)index;
+- (void)addItem:(id<SJPlaybackItem>)item;
+- (void)addItemsFromArray:(NSArray<id<SJPlaybackItem>> *)items;
+- (void)insertItemToNextPlay:(id<SJPlaybackItem>)item;
+- (void)replaceItemsFromArray:(NSArray<id<SJPlaybackItem>> *)items;
 
 - (void)removeAllItems;
 - (void)removeItemAtIndex:(NSInteger)index;
 
-- (void)enumerateItemsUsingBlock:(void(NS_NOESCAPE ^)(id item, NSInteger index, BOOL *stop))block;
+- (void)enumerateItemsUsingBlock:(void(NS_NOESCAPE ^)(id<SJPlaybackItem> item, NSInteger index, BOOL *stop))block;
 
 // playback mode
 
@@ -43,57 +45,39 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic, readonly) SJPlaybackModeMask supportedModes;
 - (void)switchToMode:(SJPlaybackMode)mode;
 - (void)switchMode;
- 
-@property (nonatomic, readonly, getter=isInfiniteListLoop) BOOL infiniteListLoop;
-
+   
 // playback control
 
-/// 当前item的索引
-///
-/// 索引值随以下状态发生变化:
-///     - 列表为空时, 将被设置为: NSNotFound
-///     - 添加新的item时: 如果添加之前列表为空, 则在添加之后索引值将被设置为: 0
-///     - 移除当前播放的item时, 此item如果是lastItem, 则索引将被设置为: 0
-///     - 切换item时, 将会设置为对应item的索引
-///     - 替换列表的操作, 请查看`replaceItemsFromArray:`
-///
 @property (nonatomic, readonly) NSInteger curIndex;
 - (void)playItemAtIndex:(NSInteger)index;
 - (void)playCurrentItem;
 - (void)playNextItem;
 - (void)playPreviousItem;
-
-/// 替换操作
-///
-///     对curIndex索引的设置:
-///         - curItem如果在`items`中, 则替换后的curIndex将变为新的索引值, 将保持当前等待状态
-///         - 否则会被设置为0. 等待状态将会被取消
-///
-- (void)replaceItemsFromArray:(NSArray *)items;
-
-/// 是否等待播放完毕
-///
-@property (nonatomic, readonly) BOOL isWaitingToPlaybackEnds;
-- (void)finishPlayback;
-- (void)cancelPlayback;
 @end
 
-@protocol SJPlaybackListControllerDelegate <NSObject>
-- (void)playbackListController:(id<SJPlaybackListController>)controller needPlayItemAtIndex:(NSInteger)index;
-- (void)needReplayForCurrentItemWithPlaybackListController:(id<SJPlaybackListController>)controller;
-- (void)needStopPlaybackWithPlaybackListController:(id<SJPlaybackListController>)controller;
+@protocol SJPlaybackItem <NSObject>
+@property (nonatomic, strong, readonly) id itemKey;
+@end
+
+typedef void(^SJPlaybackCompletionHandler)(void);
+
+@protocol SJPlaybackController <NSObject>
+/// 该block由列表控制进行设置.
+/// 播放控制请在播放完毕后调用该block.
+/// 列表控制将会通过该block来监听播放完成的时机, 以此来切换下一个item.
+@property (nonatomic, copy, nullable) SJPlaybackCompletionHandler playbackCompletionHandler;
+@property (nonatomic, strong, readonly, nullable) id<SJPlaybackItem> curItem;
+@property (nonatomic, readonly) BOOL isPaused;
+- (void)playWithItem:(id<SJPlaybackItem>)item;
+- (void)replay;
+- (void)stop;
 @end
 
 @protocol SJPlaybackListControllerObserver <NSObject>
 @optional
-- (void)playbackListController:(id<SJPlaybackListController>)controller didPlayItemAtIndex:(NSInteger)index;
+- (void)playbackListController:(id<SJPlaybackListController>)controller didPlayItem:(id<SJPlaybackItem>)item;
 - (void)playbackListController:(id<SJPlaybackListController>)controller modeDidChange:(SJPlaybackMode)mode;
-- (void)playbackListController:(id<SJPlaybackListController>)controller didAddItemAtIndex:(NSInteger)index;
-- (void)playbackListController:(id<SJPlaybackListController>)controller didAddItemsAtIndexes:(NSIndexSet *)indexes;
-- (void)playbackListController:(id<SJPlaybackListController>)controller didInsertItemAtIndex:(NSInteger)index;
-- (void)playbackListController:(id<SJPlaybackListController>)controller didReplaceItemsWithIndexes:(NSIndexSet *)indexes;
-- (void)playbackListControllerDidRemoveAllItems:(id<SJPlaybackListController>)controller;
-- (void)playbackListController:(id<SJPlaybackListController>)controller didRemoveItemAtIndex:(NSInteger)index;
+- (void)itemListDidChangeForPlaybackListController:(id<SJPlaybackListController>)controller;
 @end
 NS_ASSUME_NONNULL_END
 

@@ -11,9 +11,11 @@
 NS_ASSUME_NONNULL_BEGIN
 
 @interface SJPlaybackListController<ItemType> : NSObject<SJPlaybackListController>
-- (instancetype)initWithDelegate:(nullable id<SJPlaybackListControllerDelegate>)delegate;
+- (instancetype)initWithPlaybackController:(nullable id<SJPlaybackController>)playbackController;
+- (instancetype)init NS_UNAVAILABLE;
++ (instancetype)new NS_UNAVAILABLE;
 
-@property (nonatomic, weak, nullable) id<SJPlaybackListControllerDelegate> delegate;
+@property (nonatomic, weak, readonly, nullable) id<SJPlaybackController> playbackController;
 
 // observer
 
@@ -23,17 +25,19 @@ NS_ASSUME_NONNULL_BEGIN
 // items
 
 @property (nonatomic, readonly) NSInteger numberOfItems;
-- (nullable ItemType)itemAtIndex:(NSInteger)index;
-- (NSInteger)indexOfItem:(id)item;
+- (nullable ItemType <SJPlaybackItem>)itemAtIndex:(NSInteger)index;
+- (NSInteger)indexOfItem:(ItemType <SJPlaybackItem>)item;
+- (NSInteger)indexOfItemForKey:(id)itemKey;
 
-- (void)addItem:(ItemType)item;
-- (void)addItemsFromArray:(NSArray<ItemType> *)items;
-- (void)insertItem:(ItemType)item atIndex:(NSInteger)index;
+- (void)addItem:(ItemType <SJPlaybackItem>)item;
+- (void)addItemsFromArray:(NSArray<ItemType <SJPlaybackItem>> *)items;
+- (void)insertItemToNextPlay:(ItemType <SJPlaybackItem>)item;
+- (void)replaceItemsFromArray:(NSArray<id<SJPlaybackItem>> *)items;
 
 - (void)removeAllItems;
 - (void)removeItemAtIndex:(NSInteger)index;
 
-- (void)enumerateItemsUsingBlock:(void(NS_NOESCAPE ^)(ItemType item, NSInteger index, BOOL *stop))block;
+- (void)enumerateItemsUsingBlock:(void(NS_NOESCAPE ^)(ItemType <SJPlaybackItem> item, NSInteger index, BOOL *stop))block;
 
 // playback mode
 
@@ -41,19 +45,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) SJPlaybackModeMask supportedModes;
 - (void)switchToMode:(SJPlaybackMode)mode;
 - (void)switchMode;
- 
-@property (nonatomic, getter=isInfiniteListLoop) BOOL infiniteListLoop;
-
+  
 // playback control
 
 @property (nonatomic, readonly) NSInteger curIndex;
 - (void)playItemAtIndex:(NSInteger)index;
 - (void)playNextItem;
 - (void)playPreviousItem;
- 
-@property (nonatomic, readonly) BOOL isWaitingToPlaybackEnds;
-- (void)finishPlayback;
-- (void)cancelPlayback;
 @end
 
 NS_ASSUME_NONNULL_END

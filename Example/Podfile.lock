@@ -1,8 +1,6 @@
 PODS:
   - Masonry (1.1.0)
-  - SJPlaybackListController (0.0.5):
-    - SJPlaybackListController/Core (= 0.0.5)
-  - SJPlaybackListController/Core (0.0.5)
+  - SJPlaybackListController (1.0.1)
 
 DEPENDENCIES:
   - Masonry
@@ -18,7 +16,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Masonry: 678fab65091a9290e40e2832a55e7ab731aad201
-  SJPlaybackListController: e135c789fcd63d63a62d5e2e2965ab1e6d52a2bd
+  SJPlaybackListController: 87e58c499bce50f7dd7275ff964f17dab86859c3
 
 PODFILE CHECKSUM: 5cd21d43679f69cf3dc23f8f18ede91d735b8563
 
