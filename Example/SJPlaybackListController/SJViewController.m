@@ -10,12 +10,6 @@
 #import <SJPlaybackListController/SJPlaybackListController.h>
 @class TestVideoPlayer;
 
-@protocol TestVideoPlayerDelegate <NSObject>
-- (void)playbackDidFinish:(TestVideoPlayer *)player;
-@end
-
-#pragma mark -
-
 @interface TestVideoItem : NSObject<SJPlaybackItem>
 + (instancetype)testVideo;
 - (instancetype)initWithId:(NSInteger)id url:(NSString *)url;
@@ -26,7 +20,7 @@
 @implementation TestVideoItem
 + (instancetype)testVideo {
     static NSInteger idx = 0;
-    NSInteger videoId = ++idx;
+    NSInteger videoId = idx ++;
     NSString *url = @"http://...test/video.mp4";
     return [[self alloc] initWithId:videoId url:url];
 }
@@ -43,25 +37,33 @@
 - (id)itemKey {
     return @(_id);
 }
+
+- (BOOL)isEqualToPlaybackItem:(TestVideoItem *)item {
+    return self.id == item.id;
+}
 @end
 
 #pragma mark -
 
 @interface TestVideoPlayer : NSObject<SJPlaybackController>
-@property (nonatomic, copy, nullable) SJPlaybackCompletionHandler playbackCompletionHandler;
 @property (nonatomic, readonly) BOOL isPaused;
 
-@property (nonatomic, strong, readonly, nullable) TestVideoItem *curItem;
+@property (nonatomic, strong, readonly, nullable) TestVideoItem *currentItem;
 - (void)playWithItem:(TestVideoItem *)item;
 - (void)replay;
 - (void)stop;
+
+- (void)registerObserver:(id<SJPlaybackControllerObserver>)observer;
+- (void)removeObserver:(id<SJPlaybackControllerObserver>)observer;
 @end
 
-@implementation TestVideoPlayer
+@implementation TestVideoPlayer {
+    NSHashTable<id<SJPlaybackControllerObserver>> *_observers;
+}
 - (void)playWithItem:(TestVideoItem *)item {
     NSLog(@"%s video.id = %ld;", sel_getName(_cmd), (long)item.id);
     
-    _curItem = item;
+    _currentItem = item;
     [self _delay];
 }
 
@@ -74,9 +76,20 @@
 - (void)stop {
     NSLog(@"%s", sel_getName(_cmd));
 
-    _curItem = nil;
+    _currentItem = nil;
     _isPaused = YES;
     [NSObject cancelPreviousPerformRequestsWithTarget:self];
+}
+
+- (void)registerObserver:(id<SJPlaybackControllerObserver>)observer {
+    if ( _observers == nil ) {
+        _observers = NSHashTable.weakObjectsHashTable;
+    }
+    [_observers addObject:observer];
+}
+
+- (void)removeObserver:(id<SJPlaybackControllerObserver>)observer {
+    [_observers removeObject:observer];
 }
 
 - (void)_delay {
@@ -88,7 +101,13 @@
 - (void)_playbackDidComplete {
     NSLog(@"%s", sel_getName(_cmd));
 
-    if ( _playbackCompletionHandler ) _playbackCompletionHandler();
+    if ( _observers.count != 0 ) {
+        for ( id<SJPlaybackControllerObserver> observer in _observers ) {
+            if ( [observer respondsToSelector:@selector(playbackControllerDidFinishPlaying:)] ) {
+                [observer playbackControllerDidFinishPlaying:self];
+            }
+        }
+    }
 }
 @end
 
@@ -106,7 +125,7 @@
     [super viewDidLoad];
     
     _player = TestVideoPlayer.alloc.init;
-    _listController = [SJPlaybackListController.alloc initWithPlaybackController:_player];
+    _listController = [SJPlaybackListController.alloc initWithPlaybackController:_player queue:dispatch_get_main_queue()];
     [_listController registerObserver:self];
     
     [self _refreshModeLabel];
